@@ -10,7 +10,7 @@
         android:id="@+id/image_view_dice"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:src="@drawable/dice1"
+        android:src="@drawable/d1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
