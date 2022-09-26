@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private float currentX, currentY, currentZ, lastX, lastY, lastZ, xDifference, yDifference, zDifference;
     private float shakeThreshold = 5f;
     private Vibrator vibrator;
-
+    Animation rotateAnimation;
     //Sounds stuff
     SoundPool soundPool;
     int sound1, sound2, sound3;
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         //Get count of rolls
         SharedPreferences sharedPref= getSharedPreferences("mypref", 0);
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 rollDice();
                 //soundPool.autoPause();
                 soundPool.play(sound1,1, 1,0,0,1);
+                rotateAnimation();
             }
         });
     }
@@ -261,5 +266,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         editor.putInt("d1sRolled", d1sRolled);
         editor.putInt("d20sRolled", d20sRolled);
         editor.apply();
+    }
+
+    private void rotateAnimation() {
+
+        rotateAnimation= AnimationUtils.loadAnimation(this,R.anim.rotate);
+        imageViewDice.startAnimation(rotateAnimation);
+
     }
 }
