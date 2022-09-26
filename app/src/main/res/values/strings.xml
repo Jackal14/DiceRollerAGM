@@ -3,4 +3,7 @@
     <string name="criticalFail">CRITICAL FAIL!!! GET GOOD LOSER</string>
     <string name="criticalSuccess">CRITICAL SUCCESS!!! LETSGOOOOOOOOOOO</string>
     <string name="blank"> </string>
+    <string name="anthony">Anthony Moncivais</string>
+    <string name="d20s">Critical Successes: </string>
+    <string name="d1s">Critical Fails: </string>
 </resources>

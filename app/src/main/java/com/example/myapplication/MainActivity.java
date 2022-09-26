@@ -4,17 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioAttributes;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -27,6 +26,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private ImageView imageViewDice;
     private TextView textView;
     private Random rng = new Random();
+    private TextView d20Text;
+    private TextView d1Text;
+    private int d20sRolled = 0;
+    private int d1sRolled = 0;
 
     private SensorManager sensorManager;
     private Sensor accelerometerSensor;
@@ -44,9 +47,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Get count of rolls
+        SharedPreferences sharedPref= getSharedPreferences("mypref", 0);
+        d1sRolled = sharedPref.getInt("d1sRolled", 0);
+        d20sRolled = sharedPref.getInt("d20sRolled", 0);
         textView = findViewById(R.id.textView);
         textView.setText(getString(R.string.blank));
+        d20Text = findViewById(R.id.d20s);
+        d20Text.append(String.valueOf(d20sRolled));
+        d1Text = findViewById(R.id.d1s);
+        d1Text.append(String.valueOf(d1sRolled));
         imageViewDice = findViewById(R.id.image_view_dice);
+
 
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         if(sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null)
@@ -96,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 imageViewDice.setImageResource(R.drawable.d1);
                 textView.setText(getString(R.string.criticalFail));
                 soundPool.play(sound2, 1, 1, 0, 0, 1);
+                d1sRolled++;
+                d1Text.setText(getString(R.string.d1s) + d1sRolled);
                 break;
             case 2:
                 imageViewDice.setImageResource(R.drawable.d2);
@@ -173,6 +188,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 imageViewDice.setImageResource(R.drawable.d20);
                 textView.setText(getString(R.string.criticalSuccess));
                 soundPool.play(sound3, 1, 1, 0, 0, 1);
+                d20sRolled++;
+                d20Text.setText(getString(R.string.d20s) + d20sRolled);
                 break;
 
 
@@ -234,5 +251,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         {
             sensorManager.unregisterListener(this);
         }
+    }
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        SharedPreferences sharedPref = getSharedPreferences("mypref", 0);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("d1sRolled", d1sRolled);
+        editor.putInt("d20sRolled", d20sRolled);
+        editor.apply();
     }
 }
